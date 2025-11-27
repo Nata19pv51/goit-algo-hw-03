@@ -5,13 +5,26 @@ import sys
 
 
 def read_directory(folder: Path, indent: str = " ") -> None:
-    print(indent + str(folder.name))
-    if folder.is_dir():
-        for child in folder.iterdir():
-            read_directory(child, indent + "    ")
+    if not folder.exists():
+        print(f"Помилка: Шлях {folder} не знайдено")
+        return
+    try:
+        print(indent + str(folder.name))
+        if folder.is_dir():
+            for child in folder.iterdir():
+                read_directory(child, indent + "    ")
+    except PermissionError:
+            print(f"Помилка доступу: Не вдалося прочитати або скопіювати файли.")
 
 
 def copy_file(source: Path, destination: Path) -> None:
+    if not source.exists():
+        print(f"Помилка: Шлях {source} не знайдено")
+        return
+    if not destination.exists():
+        print(f"Помилка: Шлях {destination} не знайдено")
+        return
+    
     destination_name = str(destination.name)
 
     if source.is_file():
